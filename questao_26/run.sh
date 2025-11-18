@@ -17,6 +17,8 @@
 #   sbatch run_both_sdumont.sh 4 10000000 # usa THREADS=4 e N=10000000
 # -----------------------
 
+cd $SLURM_SUBMIT_DIR
+
 echo "Nó alocado: $SLURM_JOB_NODELIST"
 echo "Job id: $SLURM_JOB_ID"
 echo "Iniciando em: $(date)"
