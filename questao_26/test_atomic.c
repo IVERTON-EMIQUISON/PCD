@@ -1,27 +1,4 @@
-/* File: test_atomic.c
- *
- * Objetivo:
- *   Testar se operações atomic em variáveis diferentes
- *   são tratadas como seções críticas independentes.
- *
- * Como funciona:
- *   - Cada thread tem sua própria variável local (minha_soma)
- *   - Todas executam simultaneamente:
- *
- *       for (i = 0; i < n; i++)
- *           #pragma omp atomic
- *           minha_soma += sin(i);
- *
- *   - Se atomic NÃO criar uma única região crítica global,
- *     tempos com múltiplas threads devem ser parecidos com 1 thread.
- *
- * Compile:
- *   gcc -g -Wall -fopenmp -o test_atomic test_atomic.c
- *
- * Uso:
- *   ./test_atomic <threads>
- *   (entrada padrão: n)
- */
+/* File: test_atomic.c */
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -34,12 +11,15 @@ int main(int argc, char* argv[]) {
 
     int thread_count;
     long long n;
-    
+
     if (argc != 2) Usage(argv[0]);
     thread_count = strtol(argv[1], NULL, 10);
 
     printf("Enter n\n");
-    scanf("%lld", &n);
+    if (scanf("%lld", &n) != 1) {
+        printf("Erro ao ler n\n");
+        exit(1);
+    }
 
     double max_time = 0.0;
 
@@ -55,7 +35,7 @@ int main(int argc, char* argv[]) {
 
         for (i = 0; i < n; i++) {
 #pragma omp atomic
-            minha_soma += sin(i);
+            minha_soma += sin((double)i);
         }
 
         t_finish = omp_get_wtime();
